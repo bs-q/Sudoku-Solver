@@ -404,6 +404,9 @@ class gameLauncher():
         init_assign_hard = input
         sodoku = Sudoku(init_assign_hard)
         backtracking_search(sodoku)
+        resultConvert=''
+        for x in sodoku.domains:
+            resultConvert+=sodoku.domains[x][0]
         count=0
         # count # of 1
         checkValidInput=0
@@ -416,7 +419,7 @@ class gameLauncher():
         self.statusLabel['text']=':) solving, please wait'
         for i in range(9):
             for j in range(9):
-                savedNumbers[i][j].set(sodoku.domains[count][0])
+                savedNumbers[i][j].set(resultConvert[count])
                 self.track[i][j].configure(fg='#ffffff')
                 count+=1
         self.statusLabel['text']=':) solved'
