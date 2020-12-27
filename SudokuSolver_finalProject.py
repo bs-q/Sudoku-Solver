@@ -284,8 +284,6 @@ class gameLauncher():
         # # dock status on top
         self.statusLabel.pack(side=tk.TOP,fill=tk.X)
         statusfrm.pack(fill=tk.X)
-
-
         frm=tk.Frame(window)
         frm.pack(side=tk.TOP)
         
@@ -312,6 +310,7 @@ class gameLauncher():
 
         window.columnconfigure(8,weight=1)
 
+        # cell validation
         for i in range(0,9):
             for j in range(0,9):
                 
@@ -330,7 +329,7 @@ class gameLauncher():
 
                 self.track[i][j].bind('<Button-1>', self.correctGrid)
                 self.track[i][j].grid(row=i, column=j,ipady=14)
-            # game menu
+        # menu
         menu=tk.Menu(window)
         window.config(menu=menu)
         file=tk.Menu(menu,tearoff=0)
@@ -355,22 +354,18 @@ class gameLauncher():
     def correctGrid(self, event):
         widget=event.widget
         i,j=widget.grid_info()['row'],widget.grid_info()['column']
-        # for i in range(9):
-        #     for j in range(9):
-        #         if savedNumbers[i][j].get()=='':
-        #             continue
-        #         if savedNumbers[i][j].get() not in ['1','2','3','4','5','6','7','8','9']:
-        #             savedNumbers[i][j].set('')
-        #         if savedNumbers[i][j] not in self.row[i]:
-        #             self.row[i].add(savedNumbers[i][j])
+
+        # set flag, prevent edit cell
         if self.flag==True:
             return
+        # input validation
         if savedNumbers[i][j].get()=='':
             return
         if savedNumbers[i][j].get() not in ['1','2','3','4','5','6','7','8','9']:
             savedNumbers[i][j].set('')
             return
         blockIndex=(i // 3 ) * 3 + j // 3
+        # check col, row, and block
         if savedNumbers[i][j].get() not in self.row[i] and savedNumbers[i][j].get() not in self.col[j] and savedNumbers[i][j].get() not in self.block[blockIndex]:
             widget.configure(fg='#7fba00')
             self.row[i].add(savedNumbers[i][j].get())
@@ -381,6 +376,7 @@ class gameLauncher():
             # savedNumbers[i][j].set('')
             widget.configure(fg='#f25022')
         
+    # clear grid
     def clear(self):
         for i in range(9):
             for j in range(9):
@@ -393,7 +389,11 @@ class gameLauncher():
             self.block[i]=set()
         self.flag=False
         self.statusLabel['text']='Welcome back :)'
+    
+    # solve puzzle
     def solver(self):
+
+        # parse input to problem
         input=''
         for i in range(9):
             for j in range(9):
@@ -401,22 +401,29 @@ class gameLauncher():
                     input+=savedNumbers[i][j].get()
                 else:
                     input+='.'
+        # call backtracking function
         init_assign_hard = input
         sodoku = Sudoku(init_assign_hard)
         backtracking_search(sodoku)
+
+        # get result and put to string
         resultConvert=''
         for x in sodoku.domains:
             resultConvert+=sodoku.domains[x][0]
         count=0
         # count # of 1
         checkValidInput=0
+
+        # catch wrong solution
         for i in range(81):
             if sodoku.domains[i][0]=='1':
                 checkValidInput+=1
             if checkValidInput==10:
                 self.statusLabel['text']=':( invalid input!! Please try again'
                 return
+        
         self.statusLabel['text']=':) solving, please wait'
+        self.statusLabel.update()
         for i in range(9):
             for j in range(9):
                 savedNumbers[i][j].set(resultConvert[count])
