@@ -392,7 +392,9 @@ class gameLauncher():
     
     # solve puzzle
     def solver(self):
-
+        if self.flag==True:
+            self.statusLabel['text']='Please, clear the grid :('
+            return
         # parse input to problem
         input=''
         for i in range(9):
