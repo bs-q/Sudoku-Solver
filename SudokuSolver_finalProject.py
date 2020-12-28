@@ -196,7 +196,6 @@ def forward_checking(csp, var, value, assignment, removals):
     return True
  
 
-''' READ AND COMMENT to show your comprehensive understanding of the following function '''
 # Backtracking search
 def backtracking_search(csp, select_unassigned_variable=minimum_remaining_values,
                         order_domain_values=least_constraining_value, 
@@ -308,7 +307,7 @@ class gameLauncher():
         for i in range(1,10):
             self.track += [[0,0,0,0,0,0,0,0,0]]
 
-        window.columnconfigure(8,weight=1)
+        # window.columnconfigure(8,weight=1)
 
         # cell validation
         for i in range(0,9):
